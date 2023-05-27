@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid px-3">
+	<div class="row gx-5">
+		<div class="col">
+			<div class="progress" role="progressbar" aria-valuenow="{{ completed|length }}" aria-valuemin="0" aria-valuemax="{{ themes|length }}">
+				<div class="progress-bar progress-bar-striped bg-success" style="width: {{ progress }}%"></div>
+			</div>
+		</div>
+	</div>
+	<div class="row gx-5">
+		<div class="col">
+			<div class="list-group list-group-flush">
+				{% for theme in themes %}
+				{% if current_user.is_authenticated %}
+				{% if theme.id in completed %}
+				<a href="{{ url_for('theme_page', theme_id=theme.id) }}" class="list-group-item list-group-item-info list-group-item-action">{{ theme.name }}</a>
+				{% else %}
+				<a href="{{ url_for('theme_page', theme_id=theme.id) }}" class="list-group-item list-group-item-action">{{ theme.name }}</a>
+				{% endif %}
+				{% else %}
+				<a href="{{ url_for('theme_page', theme_id=theme.id) }}" class="list-group-item list-group-item-action">{{ theme.name }}</a>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

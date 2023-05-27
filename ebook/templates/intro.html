@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+	{% if message %}
+	<div class="row">
+		<div class="col">
+			<div class="alert {% if theme.is_complete %}alert-success{% else %}alert-danger{% endif %}">Вы правильно ответили на {{ count }} вопросов. {{ message }}</div>
+		</div>
+	</div>
+	{% endif %}
+	<div class="row">
+		<div class="col">
+			<h1>{{ theme.name }}</h1>
+			<p>Проба</p>
+		</div>
+	</div>
+	<form method="POST">
+		<input type="text" name="theme_id" value="{{ theme.id }}" hidden>
+		{% for question in theme.questions %}
+			<h5>{{question.text}}</h5>
+			{% if question.question_type.name.lower() == 'выбор' %}
+			{% for answer in question.answers %}
+			<div class="form-check">
+				<input type="radio" id="answer_{{answer.id}}" class="form-check-input" name="{{question.id}}" value="{{answer.id}}">
+				<label class="form-check-label" for="answer_{{answer.id}}">{{ answer.text }}</label>
+			</div>
+			{% endfor %}
+			{% else %}
+			<input type="text" class="form-control" name="" value="">
+			{% endif %}
+		{% endfor %}
+		<input type="submit" class="btn btn-primary" value="Проверить">
+	</form>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
