@@ -11,7 +11,7 @@ def index_page():
 	themes_len = db.session.query(Theme).count()
 	if current_user.is_authenticated:
 		completed = [up.theme.id for up in UserProgress.query.filter_by(user_id=current_user.id, is_complete=True)]
-	progress = int(100*len(completed)/themes_len)
+	progress = int(100*len(completed)/themes_len) if themes_len > 0 else 0
 	return render_template("index.html", themes=themes, completed=completed, progress=progress)
 
 def theme_page(theme_id):
