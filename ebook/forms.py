@@ -11,7 +11,7 @@ class LoginForm(FlaskForm):
 
 
 class SignupForm(FlaskForm):
-	fio = StringField("Логин", validators=[InputRequired("Введите ФИО")])
+	fio = StringField("ФИО", validators=[InputRequired("Введите ФИО")])
 	username = StringField("Логин", validators=[InputRequired("Введите логин")])
 	password = PasswordField("Пароль", validators=[InputRequired("Введите пароль")])
 	confirmation = PasswordField("Повторите пароль", validators=[InputRequired("Введите подтаверждение"), EqualTo('password', 'Пароли не совпадают!')])
