@@ -17,4 +17,6 @@ class SignupForm(FlaskForm):
 	confirmation = PasswordField("Повторите пароль", validators=[InputRequired("Введите подтаверждение"), EqualTo('password', 'Пароли не совпадают!')])
 	email = EmailField("Email", validators=[InputRequired("Введите e-mail"), Email("Неправильный e-mail")])
 
-	
+class ChangePwdForm(FlaskForm):
+	password = PasswordField("Пароль", validators=[InputRequired("Введите пароль")])
+	confirmation = PasswordField("Повторите пароль", validators=[InputRequired("Введите подтаверждение"), EqualTo('password', 'Пароли не совпадают!')])

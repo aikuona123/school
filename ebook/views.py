@@ -1,6 +1,6 @@
 from flask import render_template, request, session, flash, redirect, url_for
 from flask_login import login_user, logout_user, current_user
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, ChangePwdForm
 from .models import db, User, Theme, Answer, UserProgress
 
 
@@ -12,10 +12,13 @@ def index_page():
 	if current_user.is_authenticated:
 		completed = [up.theme.id for up in UserProgress.query.filter_by(user_id=current_user.id, is_complete=True)]
 	progress = int(100*len(completed)/themes_len)
-	print(progress, completed)
 	return render_template("index.html", themes=themes, completed=completed, progress=progress)
 
 def theme_page(theme_id):
+	print(current_user.is_authenticated)
+	if not current_user.is_authenticated:
+		flash('Материалы доступны только для зарегистрированных пользователей!')
+		return redirect(url_for('index_page'))
 	theme = Theme.query.get_or_404(theme_id)
 	if request.method == "POST":
 		count = 0
@@ -45,7 +48,25 @@ def add_theme():
 	return render_template("add_theme.html", form=form)
 
 def profile():
-	pass
+	if not current_user.is_authenticated:
+		flash('Вы не авторизованы!')
+		return redirect(url_for('index_page'))
+	message = None
+	query = db.session.query(UserProgress.theme_id).filter(UserProgress.user_id==current_user.id, UserProgress.is_complete==True)
+	completed_ids = list(db.session.execute(query).scalars())
+	query = db.session.query(Theme).filter(Theme.id.in_(completed_ids))
+	completed = db.session.execute(query).scalars()
+	query = db.session.query(Theme).filter(Theme.id.notin_(completed_ids))
+	notcompleted = db.session.execute(query).scalars()
+	form = ChangePwdForm()
+	if request.method == "POST":
+		if form.validate_on_submit():
+			if form.password.data == form.confirmation.data:
+				current_user.pwd = form.password.data
+				db.session.commit()
+				flash('Пароль был успешно изменен!')
+				return redirect(url_for('profile'))
+	return render_template("profile.html", completed=completed, notcompleted=notcompleted, form=form, message=message)
 
 def signup():
 	form=SignupForm()
@@ -75,6 +96,9 @@ def login_page():
 				login_user(user)
 				next = request.args.get("next")
 				return redirect(url_for("index_page"))
+			else:
+				flash('Логин или пароль не верен!')
+				return redirect(url_for('login_page'))
 
 	return render_template("login.html", form=form)
 

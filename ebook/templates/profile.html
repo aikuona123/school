@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="conteiner-fluid px-4">
+	<div class="row gx-5">
+		<div class="col">
+			{% with messages=get_flashed_messages() %}
+			{% if messages %}
+			{% for message in messages %}
+			<div class="alert alert-success">{{ message }}</div>
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+		</div>
+	</div>
+	<div class="row gx-5">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Оконченные темы</div>
+				<div class="card-body">
+					<div class="list-group list-group-flush">
+						{% for theme in completed %}
+						<a href="{{ url_for('theme_page', theme_id=theme.id) }}" class="list-group-item list-group-item-action">{{ theme.name }}</a>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row gx-5">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Оконченные темы</div>
+				<div class="card-body">
+					<div class="list-group list-group-flush">
+						{% for theme in notcompleted %}
+						<a href="{{ url_for('theme_page', theme_id=theme.id) }}" class="list-group-item list-group-item-action">{{ theme.name }}</a>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row gx-5 justify-content-center">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Изменение пароля</div>
+				<div class="card-body">
+					<form  method="post">
+						{{ form.hidden_tag() }}
+						{{ form.password.label }}
+						{{ form.password(class_="form-control") }}
+						{% if form.password.errors %}
+						{% for error in form.password.errors %}
+						<p class="word-wrap text-danger fs-6">{{ error }}</p>
+						{% endfor %}
+						{% endif %}
+						{{ form.confirmation.label }}
+						{{ form.confirmation(class_="form-control") }}
+						{% if form.confirmation.errors %}
+						{% for error in form.confirmation.errors %}
+						<p class="word-wrap text-danger fs-6">{{ error }}</p>
+						{% endfor %}
+						{% endif %}
+						<input type="submit" class="btn btn-primary" value="Изменить">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

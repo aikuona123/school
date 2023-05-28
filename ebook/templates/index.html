@@ -1,15 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid px-3">
+<div class="container-fluid px-4">
+	{% with messages=get_flashed_messages() %}
+	{% if messages %}
+	{% for message in messages %}
 	<div class="row gx-5">
+		<div class="col">
+			<div class="alert alert-danger">{{ message }}</div>
+		</div>
+	</div>
+	{% endfor %}
+	{% endif %}
+	{% endwith %}
+	<div class="row gx-4">
 		<div class="col">
 			<div class="progress" role="progressbar" aria-valuenow="{{ completed|length }}" aria-valuemin="0" aria-valuemax="{{ themes|length }}">
 				<div class="progress-bar progress-bar-striped bg-success" style="width: {{ progress }}%"></div>
 			</div>
 		</div>
 	</div>
-	<div class="row gx-5">
+	<div class="row gx-4">
 		<div class="col">
 			<div class="list-group list-group-flush">
 				{% for theme in themes %}
