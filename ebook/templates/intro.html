@@ -13,6 +13,7 @@
 		<div class="col">
 			<h1>{{ theme.name }}</h1>
 			<p>Проба</p>
+			<img src="{{ url_for('static', filename='lab1.png') }}" width="50%" height="50%">
 		</div>
 	</div>
 	<form method="POST">
@@ -27,7 +28,9 @@
 			</div>
 			{% endfor %}
 			{% else %}
-			<input type="text" class="form-control" name="" value="">
+			{% for answer in question.answers %}
+			<input type="text" id="answer_{{answer.id}}" class="form-control" name="{{question.id}}" value="" placeholder="Ваш ответ">
+			{% endfor %}
 			{% endif %}
 		{% endfor %}
 		<input type="submit" class="btn btn-primary" value="Проверить">

@@ -24,8 +24,12 @@ def theme_page(theme_id):
 		count = 0
 		for question in theme.questions:
 			if str(question.id) in request.form:
-				answer = Answer.query.get(request.form[str(question.id)])
-				count += int(answer.is_correct)
+				if question.question_type.name == 'Выбор':
+					answer = Answer.query.get(request.form[str(question.id)])
+					count += int(answer.is_correct)
+				else:
+					answer = Answer.query.filter_by(question_id=question.id).first()
+					count += int(answer.text == request.form[str(question.id)])
 		progress = UserProgress.query.filter_by(user_id=current_user.id, theme_id=theme.id).first()
 		if progress == None:
 			progress = UserProgress()
